@@ -4,6 +4,10 @@ $(document).ready(function(e){
 		isLoggedIn();
 	}
 
+	if( $('.get-news').length > 0){
+		getNews(0);
+	}
+
 	//login
 	$('.admin-login').click(function(e){
 		e.preventDefault();
@@ -69,22 +73,31 @@ $(document).ready(function(e){
 			return false;
 		}
 
-		var data = {
-			type : 'save',
-			title : title,
-			date : date,
-			description : description
-		};
+		var formData = new FormData( );
+		formData.append('file', $('#image')[0].files[0]);
+		formData.append('type','save');
+		formData.append('title',title);
+		formData.append('date',date);
+		formData.append('description',description);
 
-		$.post('admin.php',data,function(response){
-				var response = $.parseJSON(response);
-				if(response.status == false){
-					alert('Could not save the news');
-					return false;
-				}
+		$.ajax({
+		       url : 'admin.php',
+		       type : 'POST',
+		       data : formData,
+		       processData: false,  // tell jQuery not to process the data
+		       contentType: false,  // tell jQuery not to set contentType
+		       success : function(response) {
+		         var response = $.parseJSON(response);
+					if(response.status == false){
+						alert('Could not save the news');
+						return false;
+					}
 
-				window.location.href = 'view-news.html';
+					window.location.href = 'view-news.html';
+		       }
 		});
+
+		
 
 	});
 
@@ -107,5 +120,37 @@ function isLoggedIn(){
 			window.location.href = '../admin/';
 		}
 		$('.admin-page-session').removeClass('hide');
+	});
+}
+
+function getNews(offset){
+	$.post('admin.php',{ type : 'getNews', offset : offset},function(response){
+		var response = $.parseJSON(response);
+		if(response.status){
+			var newsBody = '';
+
+			var count = 1;
+			$.each(response.news,function(i,item){
+				newsBody += '<tr class="border-top-0">';
+				newsBody += '<td>'+ count++ +'</td>';
+				newsBody += '<td>'+item.date+'</td>';
+				newsBody += '<td>'+item.title+'</td>';
+				newsBody += '<td width="400">'+item.description.substring(1,40)+'...</td>';
+
+				if(item.image != null)
+					newsBody += '<td><img src="../uploads/'+item.image+'" width="100" alt=""/></td>';
+				else
+					newsBody += '<td>--</td>';
+				newsBody += '<td>';
+				newsBody += '<a href="edit-news.html?edit-news='+item.id+'" class="btn btn-sm"><i class="fa fa-edit"></i></a>';
+				newsBody += '<a href="#" data-id="'+item.id+'" class="btn btn-sm"><i class="fa fa-trash"></i></a></td>';
+				newsBody += '</tr>';
+			});
+
+			$('.news-tbody').html(newsBody);
+			
+		}else{
+			alert('No news found');
+		}
 	});
 }

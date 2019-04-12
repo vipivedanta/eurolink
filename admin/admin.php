@@ -12,9 +12,10 @@
 
 	}else if($post['type'] == 'loginCheck'){
 		$result = doLoginCheck();
-	}else if($post['type'] = 'getNews'){
-
+	}else if($post['type'] == 'getNews'){
 		$result = fetchNews($post['offset']);
+	}else if($post['type'] == 'deleteNews'){
+		$result = deleteNews($post);
 	}
 
 	die(json_encode($result));
@@ -107,6 +108,17 @@
 		return [
 			'status' => true,
 			'news' => $news
+		];
+	}
+
+	function deleteNews($post){
+		global $pdo;
+		$query = "update news set status=0 where id=?";
+		$builder = $pdo->prepare($query);
+		$builder->execute([$post['id']]);
+		return [
+			'status' => true,
+			'msg' => 'Selected news has been deleted successfully!'
 		];
 	}
 

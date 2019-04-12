@@ -101,6 +101,18 @@ $(document).ready(function(e){
 
 	});
 
+	$('body').on('click','.delete-news',function(e){
+		e.preventDefault();
+		$('.process-wait').html('Please wait while deleting the news...');
+		$.post('admin.php',{ type : 'deleteNews', id : $(this).data('id')},function(response){
+			var response = $.parseJSON(response);
+			if(response.status){
+				$('.process-wait').html(response.msg);
+				location.reload();
+			}
+		});
+	});
+
 });
 
 
@@ -143,7 +155,7 @@ function getNews(offset){
 					newsBody += '<td>--</td>';
 				newsBody += '<td>';
 				newsBody += '<a href="edit-news.html?edit-news='+item.id+'" class="btn btn-sm"><i class="fa fa-edit"></i></a>';
-				newsBody += '<a href="#" data-id="'+item.id+'" class="btn btn-sm"><i class="fa fa-trash"></i></a></td>';
+				newsBody += '<a href="#" data-id="'+item.id+'" class="btn btn-sm delete-news"><i class="fa fa-trash"></i></a></td>';
 				newsBody += '</tr>';
 			});
 

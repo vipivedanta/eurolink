@@ -12,6 +12,9 @@
 
 	}else if($post['type'] == 'loginCheck'){
 		$result = doLoginCheck();
+	}else if($post['type'] = 'getNews'){
+
+		$result = fetchNews($post['offset']);
 	}
 
 	die(json_encode($result));
@@ -43,22 +46,43 @@
 
 	function saveNews($post){
 		session_start();
+
+		if(!isset($_SESSION['admin_logged_inm'])){
+			return [
+				'status' => false,
+				'msg' => 'Session expired'
+			];
+		}
+
 		global $pdo;
 		extract($post);
 		if(empty($title) || empty($description) || empty($date)){
 			return [
-			'status' => false,
-			'msg' => 'Please fill all the mandatory fields'
-		];	
+				'status' => false,
+				'msg' => 'Please fill all the mandatory fields'
+			];	
 		}
+		if(!empty($_FILES)){
+			$ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
+			$filename = date('ymdhis').rand(10000,900000).'.'.$ext;
+			move_uploaded_file($_FILES['file']['tmp_name'], '../uploads/'.$filename);
+		}else{
+			$filename = '';
+		}
+		
 
-		$query = "insert into news(title,description,date,admin_id) values(?,?,?,?)";
+		$date = date('Y-m-d',strtotime($date));
+		$slug = strtolower(str_replace(' ','-',$title));
+
+		$query = "insert into news(title,description,date,admin_id,slug,image) values(?,?,?,?,?,?)";
 		$builder = $pdo->prepare($query);
 		$builder->execute([
 			$title,
 			$description,
 			$date,
-			$_SESSION['admin_id']
+			$_SESSION['admin_id'],
+			$slug,
+			$filename
 		]);
 
 		return [
@@ -71,6 +95,18 @@
 		session_start();
 		return [
 			'status' => isset($_SESSION['admin_logged_in'])
+		];
+	}
+
+	function fetchNews($offset){
+		global $pdo;
+		$query = "select * from news where status=1 order by created_at desc limit $offset,10";
+		$builder = $pdo->prepare($query);
+		$builder->execute();
+		$news = $builder->fetchAll();
+		return [
+			'status' => true,
+			'news' => $news
 		];
 	}
 

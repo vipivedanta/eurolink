@@ -18,6 +18,16 @@ $(document).ready(function(e){
 		getNews(page);
 	});
 
+	$('body').on('click','.page_pagination_two a.clickable-1',function(e){
+		e.preventDefault();
+		var page = $(this).data('page');
+		fetchGuestNews(page);
+	});
+
+	if( $('.guest-news-events').length > 0 ){
+		fetchGuestNews(0);
+	}
+
 	//login
 	$('.admin-login').click(function(e){
 		e.preventDefault();
@@ -220,6 +230,10 @@ $(document).ready(function(e){
 		});
 	});
 
+	if( $('.main-new-details').length > 0){
+		getNewsDetails();
+	}
+
 });
 
 
@@ -313,4 +327,65 @@ function getIndNews(){
 	 			$('.news-fetch-alert').html('Could not fetch the news item..');
 	 		}
 	 });
+}
+
+function fetchGuestNews(offset){
+	$.post('guest.php',{ type : 'news',offset:offset}, function(response){
+		var response = $.parseJSON(response);
+		if(!response.status){
+			$('.no-news').removeClass('hide');
+			$('.all-news').addClass('hide');
+		}else{
+			$('.no-news').addClass('hide');
+			$('.all-news').removeClass('hide');
+
+			var news_html = '';
+			$('.news-items').html('');
+			$.each(response.news,function(i,item){
+				var date2 = moment(new Date(item.date));
+
+				if(item.image == null || item.image == '')
+					item.image = 'https://via.placeholder.com/150?text=no+image';
+				else
+					item.image = 'uploads/' + item.image;
+
+
+				news_html = '<div class="news-block col-lg-4">\
+                    <div class="inner-box">\
+                        <div class="image">\
+                            <img src="'+item.image+'" alt="">\
+                            <a href="news-details.html?news='+item.id+'&'+item.slug+'" class="overlay-link"><span class="icon-search"></span></a>\
+                        </div>\
+                        <div class="lower-content">\
+                            <ul class="post-info">\
+                                <li class="category">'+date2.format('MMMM')+' '+date2.format('DD')+', '+date2.format('YYYY')+'</li>\
+                            </ul>\
+                            <h4><a href="news-details.html?news='+item.id+'&'+item.slug+'">'+item.title+'</a></h4>\
+                            <div class="text">'+item.description.substring(1,50)+'</div>\
+                        </div>\
+                    </div>\
+                </div> '
+
+                $('.news-items').append(news_html);
+			});
+
+			$('.pagination-holder').html(response.links);
+		}
+	});
+}
+
+function getNewsDetails(){
+	var newsID = getUrlParameter('news');
+	$.post('guest.php',{ type:'indiNews', id : newsID},function(response){
+		var response = $.parseJSON(response);
+		if(!response.status){
+			alert(response.msg);
+			window.location.href = 'news-and-events.html';
+		}
+
+		$('.news-title').html(response.news.title);
+		$('.news-body').html(response.news.description);
+		$('.news-img').attr('src','uploads/'+response.news.image);
+		$('.news-date').html( moment(new Date(response.news.date)).format('DD') + '<br/>' + moment(new Date(response.news.date)).format('MMMM'));
+	});
 }

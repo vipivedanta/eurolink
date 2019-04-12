@@ -20,7 +20,7 @@
 <!--[if lt IE 9]><script src="js/respond.js"></script><![endif]-->
 </head>
 
-<body>
+<body class="guest-news-events">
 <div class="page-wrapper">
     
     <!-- Preloader -->
@@ -166,16 +166,16 @@
     </section>
 	
 	<section class="blog-section sp-one">
-		<div class="container">
+		<div class="container no-news">
 			<div class="row">
 				<div class="col-md-12">
 					No news found
 				</div>
 			</div>
 		</div>
-        <!--<div class="container">
-            <div class="row">
-                <div class="news-block col-lg-4">
+        <div class="container all-news">
+            <div class="row news-items">
+                <div class="news-block col-lg-4 hide" style="display:none;">
                     <div class="inner-box">
                         <div class="image">
                             <img src="images/news/1.jpg" alt="">
@@ -189,45 +189,17 @@
                             <div class="text">Lorem ipsum dolor sit amet, consectetur blandit ac semper ac, lobortis a nibh.</div>
                         </div>
                     </div>
-                </div>
-                <div class="news-block col-lg-4">
-                    <div class="inner-box">
-                        <div class="image">
-                            <img src="images/news/1.jpg" alt="">
-                            <a href="news-details.html" class="overlay-link"><span class="icon-search"></span></a>
-                        </div>
-                        <div class="lower-content">
-                            <ul class="post-info">
-                                <li class="category">Nov 05, 2018</li>
-                            </ul>
-                            <h4><a href="news-details.html">Lorem ipsum dolor sit amet</a></h4>
-                            <div class="text">Lorem ipsum dolor sit amet, consectetur blandit ac semper ac, lobortis a nibh.</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="news-block col-lg-4">
-                    <div class="inner-box">
-                        <div class="image">
-                            <img src="images/news/1.jpg" alt="">
-                            <a href="news-details.html" class="overlay-link"><span class="icon-search"></span></a>
-                        </div>
-                        <div class="lower-content">
-                            <ul class="post-info">
-                                <li class="category">Nov 05, 2018</li>
-                            </ul>
-                            <h4><a href="news-details.html">Lorem ipsum dolor sit amet</a></h4>
-                            <div class="text">Lorem ipsum dolor sit amet, consectetur blandit ac semper ac, lobortis a nibh.</div>
-                        </div>
-                    </div>
-                </div>
+                </div>             
+                
             </div>
-            <ul class="page_pagination_two center">
+            <div class="pagination-holder"></div>
+            <ul class="page_pagination_two center hide" style="display:none;">
                 <li><a href="#" class="tran3s"><i class="fa fa-angle-left" aria-hidden="true"></i></a></li>
                 <li><a href="#" class="active tran3s">1</a></li>
                 <li><a href="#" class="tran3s">2</a></li>
                 <li><a href="#" class="tran3s"><i class="fa fa-angle-right" aria-hidden="true"></i></a></li>
             </ul>
-        </div>-->
+        </div>
     </section>
 
     <!-- Main footer -->
@@ -321,6 +293,7 @@
 <script src="js/jquery.bootstrap-touchspin.js"></script>
 
 <script src="js/script.js"></script>
-
+<script src="js/moment.js"></script>
+<script src="js/app.js"></script>
 </body>
 </html>

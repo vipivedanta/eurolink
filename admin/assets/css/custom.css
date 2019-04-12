@@ -1,0 +1,42 @@
+.add-more
+{
+	font-size: 22px;
+}
+.service-adding
+{
+	border: 1px solid #f1e9cc;
+    padding: 10px 10px;
+    background: #fffae8;
+}
+.invoice-descs
+{
+	border: 1px solid #f1e9cc;
+    padding: 10px 10px;
+    background: #fffae8;	
+}
+.coglink
+{
+	background:#a57cb9;
+}
+
+.row-pending
+{
+	background: #ffc56e;
+	color: #000;
+}
+
+.row-closed
+{
+	background: #adda9f;
+	color: #000;
+}
+
+.row-open
+{
+	background: #ff7373;
+	color: #000;
+}
+.hide
+{
+	display: none;
+}

@@ -1,0 +1,163 @@
+/* Zuberia - HTML Template */
+
+@media only screen and (max-width: 1800px) {
+	.main-slider .slider-wrapper .image img {
+		width: auto;
+	}
+}
+
+@media only screen and (max-width: 1300px) {
+	.page-wrapper {
+		overflow: hidden;
+	}
+}
+
+@media only screen and (min-width: 1200px) {
+	.five-column {
+		max-width: 20%;
+	}
+}
+
+@media only screen and (max-width: 1199px) {
+	.page-wrapper {
+		margin-bottom: 0px !important;
+	}
+	.container {
+		max-width: 100%;
+	}
+	.header-top .phone-info {
+		display: none;
+	}
+	.service-block-two .icon {
+	    position: relative;
+	    top: 0;
+	    right: 0;
+	    margin-bottom: 20px;
+	}
+	.case-section .cases-tab .cases-tab-btns {
+		text-align: left;
+	}
+	.case-section .cases-tab .cases-tab-btns .p-tab-btn {
+		margin-left: 0px;
+	}
+	.main-header .menu-right-content .link-btn {
+		display: none;
+	}
+	.main-header .menu-right-content {
+		display: none;
+	}
+}
+
+@media only screen and (min-width: 992px) {
+	.row.row-revers-lg {
+	  -webkit-box-orient: horizontal !important;
+	  -webkit-box-direction: reverse !important;
+	  -ms-flex-direction: row-reverse !important;
+	  flex-direction: row-reverse !important;
+	}
+}
+
+
+@media only screen and (max-width: 991px) {
+	.testimonial-section .quote {
+		position: relative;
+		left: 0;
+		margin: 0 auto;
+		margin-bottom: 20px;
+	}
+	.main-footer .footer-bottom .container-wrapper {
+		justify-content: center;
+	}
+	.main-footer .footer-bottom .container-wrapper .logo {
+		width: 100%;
+		margin-bottom: 30px;
+	}
+	.main-footer .footer-bottom ul {
+	    margin: 10px 0;
+	}
+	.main-header .menu-right-content {
+		display: block;
+	}
+	.success-block .inner-box {
+		margin-bottom: 30px;
+	}
+	
+}
+
+@media only screen and (max-width: 767px) {
+	.header-bottom .left-column .text {
+		display: none;
+	}
+	.main-slider .banner-tab .banner-tab-btns {
+		margin: 0px;
+	}
+	.main-slider .banner-tab .banner-tab-btns .b-tab-btn {
+		width: 100%;
+		margin: 0 0 30px;
+	}
+	.video-section .outer-box {
+		padding-left: 15px;
+		padding-right: 15px;
+	}
+	.subscribe-form {
+	    width: 100%;
+	    margin-top: 20px;
+	}
+	.project-solution .graph .graph-wrapper,
+	.about-section-two .graph .graph-wrapper {
+		background: none;
+		padding-left: 0;
+	}
+}
+
+
+@media only screen and (max-width: 599px) {
+	.main-slider h1 {
+		font-size: 48px;
+		line-height: 50px;
+	}
+	.about-text-block .year-of-service {
+	    position: relative;
+	    transform: rotate(0deg);
+	    left: 0;
+	    top: 0;
+	}
+
+	.about-text-block .lower-content {
+	    padding-left: 0;
+	}
+	.blockquote {
+	    padding-left: 25px;
+	    padding-right: 25px;
+	}
+
+	.comments-area .comment-box.reply-comment {
+	    margin-left: 0;
+	}
+
+	.author-box .wrapper-area .img-box, .author-box .wrapper-area .text {
+	    display: block;
+	}
+
+	.author-box .wrapper-area .text {
+	    padding-left: 0;
+	    margin-top: 20px;
+	}
+
+	.blog-post-pagination .prev-post {
+	    width: 100%;
+	    margin-bottom: 20px;
+	}
+
+	.blog-post-pagination .next-post {
+	    width: 100%;
+	}
+
+	.blog-post-pagination:after {
+	    opacity: 0;
+	}
+	.testimonial-section .owl-nav {
+		display: none;
+	}
+}
+

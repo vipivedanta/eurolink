@@ -20,6 +20,10 @@
 		$result = getIndNews($post);
 	}else if($post['type'] == 'updateNews'){
 		$result = updateNews($post);
+	}else if($post['type'] == 'signout'){
+		$result = doSignout();
+	}else if($post['type'] == 'changePassword'){
+		$result = changePassword($post);
 	}
 
 	die(json_encode($result));
@@ -52,7 +56,7 @@
 	function saveNews($post){
 		session_start();
 
-		if(!isset($_SESSION['admin_logged_inm'])){
+		if(!isset($_SESSION['admin_logged_in'])){
 			return [
 				'status' => false,
 				'msg' => 'Session expired'
@@ -154,15 +158,53 @@
 		];
 	}
 
+	function createLinks($total,$per_page,$offset){
+
+		if($total <= $per_page) return '';
+
+		$total_pages = ceil($total/$per_page);
+		$links = '<ul class="pagination mg-b-0 page-0">';
+		for($i=1;$i<=$total_pages;$i++){
+			if($i == ($offset+1)){
+				$j = $i;
+				if($i <= 1) $j = 0;
+				if($i > $total_pages) $j = $total_pages;
+				$links .= "<li class='page-item'><a class='page-link' href='#'>$i</a></li>";
+			}
+			else{
+				$j = $i;
+				if($i == 1) $j = 0;
+				if($i > $total_pages) $j = $total_pages;
+				$links .= "<li class='page-item'><a data-page='$j' class='page-link clickable' href='#'>$i</a></li>";
+			}
+		}
+		$links .= '</ul>';
+		return $links;
+	}
+
 	function fetchNews($offset){
 		global $pdo;
-		$query = "select * from news where status=1 order by created_at desc limit $offset,10";
+
+		#get count
+		$query = "select count(id) as total from news where status=?";
+		$builder = $pdo->prepare($query);
+		$builder->execute([1]);
+		$row = $builder->fetch();
+		$total = $row['total'];
+		$per_page = 20;
+		$links = createLinks($total,$per_page,$offset);
+
+		#$offset = $offset * $per_page;
+
+		$query = "select * from news where status=1 order by created_at desc limit $offset,$per_page";
 		$builder = $pdo->prepare($query);
 		$builder->execute();
 		$news = $builder->fetchAll();
 		return [
 			'status' => true,
-			'news' => $news
+			'news' => $news,
+			'links' => $links,
+			'query' => $query
 		];
 	}
 
@@ -189,6 +231,43 @@
 		}
 
 		return ['status' => true, 'news' => $news ];
+	}
+
+	function doSignout(){
+		session_start();
+		unset($_SESSION['admin_logged_in']);
+		unset($_SESSION['admin_id']);
+		session_destroy();
+		return [
+			'status' => true
+		];
+	}
+
+	function changePassword($post){
+		global $pdo;
+		extract($post);
+
+		if(empty($old_password) || empty($new_password) || empty($repeat_password)){
+			return ['status' => false,'msg' => 'Please fill all the three fields'];
+		}
+
+		if($new_password != $repeat_password){
+			return ['status' => false,'msg' => 'Passwords do not match'];
+		}
+
+		$query = "select id from admin where password=?";
+		$builder = $pdo->prepare($query);
+		$builder->execute([md5($old_password)]);
+		$admin = $builder->fetch();
+
+		if(empty($admin)){
+			return ['status' => false, 'msg' => 'Please type your old password correct'];
+		}
+
+		$query = 'update admin set password=? where id=?';
+		$builder = $pdo->prepare($query);
+		$builder->execute([ md5($new_password),1]);
+		return ['status' => true,'msg' => 'Your password has been changed successfully!'];
 	}
 
 ?>

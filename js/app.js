@@ -12,6 +12,12 @@ $(document).ready(function(e){
 		getIndNews();
 	}
 
+	$('body').on('click','.pagination a.clickable',function(e){
+		e.preventDefault();
+		var page = $(this).data('page');
+		getNews(page);
+	});
+
 	//login
 	$('.admin-login').click(function(e){
 		e.preventDefault();
@@ -55,6 +61,22 @@ $(document).ready(function(e){
 
 	});
 
+	//logout
+	$('.mdi-logout-variant').closest('a').click(function(e){
+		e.preventDefault();
+		var link = $(this);
+		$(this).html('Signing out...');
+		$.post('admin.php',{ type : 'signout'},function(response){
+			var response = $.parseJSON(response);
+			if(response.status){
+				window.location.href = '../admin/';
+			}else{
+				alert('Could not sign out');
+				$(link).html('Sign out');
+			}
+		});
+	});
+
 	//add news
 	$('.add-news').click(function(e){
 		e.preventDefault();
@@ -77,6 +99,9 @@ $(document).ready(function(e){
 			return false;
 		}
 
+		var btnEl = $(this);
+		disableBtn(btnEl);
+
 		var formData = new FormData( );
 		formData.append('file', $('#image')[0].files[0]);
 		formData.append('type','save');
@@ -91,6 +116,7 @@ $(document).ready(function(e){
 		       processData: false,  // tell jQuery not to process the data
 		       contentType: false,  // tell jQuery not to set contentType
 		       success : function(response) {
+		       	enableBtn(btnEl,'Add');
 		         var response = $.parseJSON(response);
 					if(response.status == false){
 						alert('Could not save the news');
@@ -166,6 +192,34 @@ $(document).ready(function(e){
 
 	});
 
+	$('.change-password').click(function(e){
+		e.preventDefault();
+		var btnEl = $(this);
+		var old_password = $('#old_password').val();
+		var new_password = $('#new_password').val();
+		var repeat_password = $('#repeat_password').val();
+
+		var data = {
+			type : 'changePassword',
+			old_password : old_password,
+			new_password : new_password,
+			repeat_password : repeat_password
+		};
+
+		disableBtn(btnEl);
+
+		$('.alert').addClass('hide');
+		$.post('admin.php',data,function(response){
+			enableBtn(btnEl,'Chnage Password');
+			var response = $.parseJSON(response);
+			if(!response.status){
+				$('.alert-danger').html(response.msg).removeClass('hide');
+			}else{
+				$('.alert-success').html(response.msg).removeClass('hide');
+			}
+		});
+	});
+
 });
 
 
@@ -217,6 +271,7 @@ function getNews(offset){
 			});
 
 			$('.news-tbody').html(newsBody);
+			$('.pagination').html(response.links);
 			
 		}else{
 			alert('No news found');

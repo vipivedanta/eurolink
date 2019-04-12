@@ -95,9 +95,7 @@ $(document).ready(function(e){
 
 					window.location.href = 'view-news.html';
 		       }
-		});
-
-		
+		});	
 
 	});
 
@@ -111,6 +109,7 @@ $(document).ready(function(e){
 				location.reload();
 			}
 		});
+
 	});
 
 });
@@ -149,13 +148,17 @@ function getNews(offset){
 				newsBody += '<td>'+item.title+'</td>';
 				newsBody += '<td width="400">'+item.description.substring(1,40)+'...</td>';
 
+
 				if(item.image != null)
+
 					newsBody += '<td><img src="../uploads/'+item.image+'" width="100" alt=""/></td>';
 				else
 					newsBody += '<td>--</td>';
 				newsBody += '<td>';
+
 				newsBody += '<a href="edit-news.html?edit-news='+item.id+'" class="btn btn-sm"><i class="fa fa-edit"></i></a>';
 				newsBody += '<a href="#" data-id="'+item.id+'" class="btn btn-sm delete-news"><i class="fa fa-trash"></i></a></td>';
+
 				newsBody += '</tr>';
 			});
 

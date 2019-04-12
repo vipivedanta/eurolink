@@ -72,6 +72,7 @@
 		}
 		
 
+
 		$date = date('Y-m-d',strtotime($date));
 		$slug = strtolower(str_replace(' ','-',$title));
 

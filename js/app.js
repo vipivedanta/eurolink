@@ -8,6 +8,10 @@ $(document).ready(function(e){
 		getNews(0);
 	}
 
+	if( $('.edit-news-page').length > 0){
+		getIndNews();
+	}
+
 	//login
 	$('.admin-login').click(function(e){
 		e.preventDefault();
@@ -99,6 +103,56 @@ $(document).ready(function(e){
 
 	});
 
+	$('.update-news').click(function(e){
+		var btnEl = $(this);
+		disableBtn(btnEl);
+		e.preventDefault();
+		var title = $('#title').val();
+		var date = $('#date').val();
+		var description = $('#description').val();
+
+		if(title == ''){
+			alert('Please enter the title');
+			return false;
+		}
+
+		if(date == ''){
+			alert('Please select the date');
+			return false;
+		}
+
+		if(description == ''){
+			alert('Please enter the description');
+			return false;
+		}
+
+		var formData = new FormData( );
+		formData.append('file', $('#image')[0].files[0]);
+		formData.append('type','updateNews');
+		formData.append('title',title);
+		formData.append('date',date);
+		formData.append('description',description);
+		formData.append('id',getUrlParameter('edit-news'));
+
+		$.ajax({
+		       url : 'admin.php',
+		       type : 'POST',
+		       data : formData,
+		       processData: false,  // tell jQuery not to process the data
+		       contentType: false,  // tell jQuery not to set contentType
+		       success : function(response) {
+		       	enableBtn(btnEl,'Update');
+		         var response = $.parseJSON(response);
+					if(response.status == false){
+						alert('Could not update the news');
+						return false;
+					}
+
+					window.location.href = 'view-news.html';
+		       }
+		});	
+	});
+
 	$('body').on('click','.delete-news',function(e){
 		e.preventDefault();
 		$('.process-wait').html('Please wait while deleting the news...');
@@ -168,4 +222,40 @@ function getNews(offset){
 			alert('No news found');
 		}
 	});
+}
+
+var getUrlParameter = function getUrlParameter(sParam) {
+    var sPageURL = window.location.search.substring(1),
+        sURLVariables = sPageURL.split('&'),
+        sParameterName,
+        i;
+
+    for (i = 0; i < sURLVariables.length; i++) {
+        sParameterName = sURLVariables[i].split('=');
+
+        if (sParameterName[0] === sParam) {
+            return sParameterName[1] === undefined ? true : decodeURIComponent(sParameterName[1]);
+        }
+    }
+};
+
+
+function getIndNews(){
+	 var newsID = getUrlParameter('edit-news');
+	 $.post('admin.php',{ type : 'getIndNews', id : newsID}, function(response){
+	 		var response = $.parseJSON(response);
+	 		if(response.status){
+	 			$('.news-fetch-alert').remove();
+	 			$('#title').val(response.news.title);
+	 			$('#date').val(response.news.date);
+	 			$('#description').val(response.news.description);
+
+	 			if(response.news.image != null && response.news.image != '')
+	 				$('.uploaded-image').html('<img src="../uploads/' + response.news.image + '" width="100" height="100" />');
+	 			else
+	 				$('.uploaded-image').html('No image uploaded');
+	 		}else{
+	 			$('.news-fetch-alert').html('Could not fetch the news item..');
+	 		}
+	 });
 }

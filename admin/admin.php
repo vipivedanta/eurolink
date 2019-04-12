@@ -16,6 +16,10 @@
 		$result = fetchNews($post['offset']);
 	}else if($post['type'] == 'deleteNews'){
 		$result = deleteNews($post);
+	}else if($post['type'] == 'getIndNews'){
+		$result = getIndNews($post);
+	}else if($post['type'] == 'updateNews'){
+		$result = updateNews($post);
 	}
 
 	die(json_encode($result));
@@ -70,8 +74,6 @@
 		}else{
 			$filename = '';
 		}
-		
-
 
 		$date = date('Y-m-d',strtotime($date));
 		$slug = strtolower(str_replace(' ','-',$title));
@@ -90,6 +92,58 @@
 		return [
 			'status' => true,
 			'msg' => 'New story has been saved!'
+		];		
+	}
+
+	function updateNews($post){
+		session_start();
+
+		if(!isset($_SESSION['admin_logged_in'])){
+			return [
+				'status' => false,
+				'msg' => 'Session expired'
+			];
+		}
+
+		global $pdo;
+		extract($post);
+		if(empty($title) || empty($description) || empty($date)){
+			return [
+				'status' => false,
+				'msg' => 'Please fill all the mandatory fields'
+			];	
+		}
+		if(!empty($_FILES)){
+			$ext = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
+			$filename = date('ymdhis').rand(10000,900000).'.'.$ext;
+			move_uploaded_file($_FILES['file']['tmp_name'], '../uploads/'.$filename);
+		}else{
+
+			$query = "select image from news where id=?";
+			$builder = $pdo->prepare($query);
+			$builder->execute([$post['id']]);
+			$news = $builder->fetch();
+			$filename = $news['image'];
+		}
+
+		$date = date('Y-m-d',strtotime($date));
+		$slug = strtolower(str_replace(' ','-',$title));
+
+		$query = "update news set title=?,description=?,date=?,admin_id=?,slug=?,image=? where id=?";
+		$builder = $pdo->prepare($query);
+		$builder->execute([
+			$title,
+			$description,
+			$date,
+			$_SESSION['admin_id'],
+			$slug,
+			$filename,
+			$post['id']
+		]);
+
+		return [
+			'status' => true,
+			'msg' => 'New story has been updated!'
 		];		
 	}
 
@@ -121,6 +175,20 @@
 			'status' => true,
 			'msg' => 'Selected news has been deleted successfully!'
 		];
+	}
+
+	function getIndNews($post){
+		global $pdo;
+		$query = "select * from news where id =?";
+		$builder = $pdo->prepare($query);
+		$builder->execute([$post['id']]);
+		$news = $builder->fetch();
+
+		if(empty($news)){
+			return [ 'status' => false, 'msg' => 'Invalid news item'];
+		}
+
+		return ['status' => true, 'news' => $news ];
 	}
 
 ?>

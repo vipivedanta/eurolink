@@ -47,7 +47,7 @@
 		<link href="assets/css/icons.css" rel="stylesheet" />
 		<link href="assets/css/custom.css" rel="stylesheet" />
 	</head>
-	<body >
+	<body class="admin-page-session edit-news-page">
 		<div id="global-loader" ></div>
 		<div class="page" >
 			<div class="page-main">
@@ -130,13 +130,15 @@
 										<h3 class="card-title">News Details</h3>
 									</div>
 									<div class="card-body">
+
+									<div class="alert alert-info news-fetch-alert">Please wait while getting the news info..</div>
 										
 										<div class="row">
 											<div class="col-md-6">
 													
 												<div class="form-group">
 													<label class="form-label">News Title</label>
-													<input type="text" class="form-control" name="example-text-input" placeholder="News Title" value="Lorem Ipsum">
+													<input id="title" type="text" class="form-control" name="example-text-input" placeholder="News Title">
 												</div>	
 
 												<div class="form-group">
@@ -146,7 +148,7 @@
 													<div class="input-group-text">
 														<i class="fa fa-calendar tx-16 lh-0 op-6"></i>
 													</div>
-												</div><input class="form-control fc-datepicker" placeholder="MM/DD/YYYY" value="07-04-2019" type="text">
+												</div><input id="date" class="form-control fc-datepicker" placeholder="MM/DD/YYYY" type="text">
 											</div>
 												</div>
 										
@@ -158,29 +160,25 @@
 										
 												<div class="form-group">
 													<label class="form-label">Change Image</label>
-												<input type="file" data-height="180" />
+												<input type="file" data-height="180" id="image" />
 												</div>	
+
+												<div class="uploaded-image"></div>
 
 													
 												<div class="form-group">
 													<label class="form-label">Description</label>
-													<textarea class="form-control" name="example-text-input" placeholder="Description" value="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam at lacus urna. Donec vestibulum purus ac lectus euismod, id facilisis massa lacinia. Cras efficitur dui a viverra lobortis. Suspendisse lobortis vel neque ac pretium. Integer ultricies consectetur dictum. In elementum gravida scelerisque."></textarea>
+													<textarea class="form-control" id="description" name="example-text-input" placeholder="Description" value=""></textarea>
 												</div>
 
 											</div>
 										</div>
-										
-										
-										
-										
-												
-										
 												
 										
 									</div>
 									<div class="card-footer text-right">
 										<div class="d-flex">
-											<button type="submit" class="btn btn-primary ml-auto">Add</button>
+											<button type="submit" class="btn btn-primary ml-auto update-news">Update</button>
 										</div>
 									</div>
 								</form>
@@ -244,7 +242,7 @@
 		<!-- Input Mask Plugin -->
 		<script src="assets/plugins/input-mask/jquery.mask.min.js"></script>
 
-		<script src="assets/js/index5.js"></script>
+		<!-- <script src="assets/js/index5.js"></script> -->
 
 		<!-- Custom scroll bar Js-->
 		<script src="assets/plugins/scroll-bar/jquery.mCustomScrollbar.concat.min.js"></script>
@@ -255,6 +253,7 @@
 		
 		<!-- Custom Js-->
 		<script src="assets/js/custom.js"></script>
+		<script src="../js/app.js"></script>
 
 		<!-- Data table js -->
 		<script>

@@ -14038,5 +14038,9 @@ btn Style One
 .hide{
 	display: none;
 }
-
-
+.news-item h4{
+	color:#FFF;
+}
+.border-red{
+	border:solid red 1px !important;
+}

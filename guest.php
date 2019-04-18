@@ -2,6 +2,7 @@
 	
 	include_once 'database.php';
 	ini_set('display_errors',1);
+	error_reporting(E_ALL);
 
 	$post = $_POST;
 
@@ -9,6 +10,10 @@
 		$result = fetchNews($post['offset']);
 	}else if($post['type'] == 'indiNews'){
 		$result = fetchInidividualNews($post);
+	}else if($post['type'] == 'intro_news'){
+		$result = fetchIntroNews();
+	}else if($post['type'] == 'contact'){
+		$result = sendContact($post);
 	}
 
 	die(json_encode($result));
@@ -77,4 +82,19 @@
 
 		return ['status' => true,'news' => $news];
 	}
+
+	function fetchIntroNews(){
+		global $pdo;
+		$query = "select * from news where status = 1 order by id desc limit 0,2";
+		$builder = $pdo->prepare($query);
+		$builder->execute();
+		$news = $builder->fetchAll();
+	
+		if(empty($news)){
+			return ['status' => false,'msg' => 'No news found'];
+		}
+
+		return ['status' => true, 'news' => $news ];
+	}
+
 ?>
